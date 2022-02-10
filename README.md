@@ -57,6 +57,7 @@ git clone https://github.com/muditha-silva/data-ingestion-service.git
 ### Deployment Stack Configurations.
 
 Default stack configurations can find here [here](./etc/default.json).
+
 **_Important_**
 
 -   Change the 'RawDataBucketName' for a unique s3 bucket name. Please note that Bucket name is suffixed with {aws-region}. For this example **_raw-data-lake-dev-eu-west-1_**
