@@ -116,7 +116,7 @@ Upload batch of files into s3 raw data bucket.
 
 State Machine Execution
 
-![image info](images/state-machine.jpg.png)
+![image info](images/state-machine.png)
 
 Query Data
 
