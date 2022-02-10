@@ -39,7 +39,7 @@ To deploy this project, follow these steps.
 ### Clone the project
 
 ```
-git clone https://github.com/dabit3/graphql-api-cdk-serverless-postgres.git
+git clone https://github.com/muditha-silva/data-ingestion-service.git
 ```
 
 ### Install dependencies
