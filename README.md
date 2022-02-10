@@ -13,7 +13,7 @@ The proposed solution is a production-ready AWS fully managed scalable serverles
 -   `S3` for Object store
 -   `Serverless Aurora PostgreSQL` as Back End
 -   `SQS` for buffering S3 Object Create events
--   `Lambda` Batch process events using Lambda event source configurations (Batch Size and Batch Window). Trigger State Machine execution and pass event batch as input for Lambda code [here](./src/sqs-event-listener-lambda.ts)
+-   `Lambda Function (sqs-event-listener-lambda)` Batch process events using Lambda event source configurations (Batch Size and Batch Window). Trigger State Machine execution and pass event batches as input for Lambda code [here](./src/sqs-event-listener-lambda.ts)
 
 -   `Step Function` process S3 Object Create events in batches, retrieve the S3 Objects, and ingest data into PostgreSQL.
 
@@ -60,8 +60,8 @@ Default stack configurations can find here [here](./etc/default.json).
 
 **_Important_**
 
--   Change the 'RawDataBucketName' for a unique s3 bucket name. Please note that Bucket name is suffixed with {aws-region}. For this example **_raw-data-lake-dev-eu-west-1_**
--   Lambda SQS event source mapping for Batch Size and Batch Window (in minutes)
+-   Change the 'RawDataBucketName' for a unique s3 bucket name. Please note that Bucket name is suffixed with {aws-region}. For this senario **_raw-data-lake-dev-eu-west-1_**
+-   Lambda SQS event source mapping configurations for Batch Size and Batch Window (in minutes)
     -   `"SQSBatchSize":"100"`
     -   `"SQSBatchWindow":"1"`
 
@@ -85,11 +85,11 @@ This stack uses **_assets_**, therefore the toolkit stack (CDKToolkit) therefore
 
 ### Create the raw_data table
 
-Visit the RDS dashboard and click on Query Editor. From the dropdown menu, choose the database (it should begin with dataingestionservice-auroradatacluster).
+Visit the RDS dashboard and click on Query Editor. From the dropdown menu, choose the database (it should begin with `dataingestionservice-auroradatacluster`).
 
 For the Database username, choose Connect with a Secrets Manager ARN.
 
-To sign in, you will need the ARN from the secret that was created by CDK. To get this secret, in a new window open AWS Secrets manager. Here, click on the secret that was created by CDK (it should start with AuroraBlogClusterSecret). Copy the Secret ARN to your clipboard and go back to the RDS Query Editor.
+To sign in, you will need the ARN from the secret that was created by CDK. To get this secret, in a new window open AWS Secrets manager. Here, click on the secret that was created by CDK (it should start with `AuroraDataClusterSecret`). Copy the Secret ARN to your clipboard and go back to the RDS Query Editor.
 
 Next, use the Secret ARN as the Secrets Manager ARN and RawDataDB as the name of the database. Next, press enter and click on Connect to Database.
 
