@@ -1,0 +1,8 @@
+{    
+    "AppName":"data-ingestion-service",
+    "RawDataBucketName":"raw-data-lake-dev",
+    "DataBaseName":"RawDataDB",
+    "RawDataTableName":"raw_data",
+    "SQSBatchSize":"100",
+    "SQSBatchWindow":"1"
+ }
