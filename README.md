@@ -6,7 +6,7 @@ The following diagram shows the data ingestion architecture.
 
 ![image info](images/architecture.jpg)
 
-The proposed solution is a production-ready AWS fully managed scalable serverless solution.
+The proposed solution is a production-ready AWS fully managed scalable serverless solution for bulk data batch processing.
 
 ### AWS Services
 
