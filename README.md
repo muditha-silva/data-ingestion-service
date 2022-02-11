@@ -18,7 +18,7 @@ The proposed solution is a production-ready AWS fully managed scalable serverles
 -   `Step Function` process S3 Object Create events in batches, retrieve the S3 Objects, and ingest data into PostgreSQL.
 
     -   Batch Process S3 Lambda code [here](./src/s3-messages-retrieval-lambda.ts)
-    -   Batch Ingest Data Lambda code [here](./src/aurora-message-ingestion-lambda.ts)
+    -   Batch Data Ingestion Lambda code [here](./src/aurora-message-ingestion-lambda.ts)
 
 -   `CDK` for Infrastructure provisioning and deployment code [here](./lib/project-stack.ts)
 
