@@ -2,7 +2,7 @@ import { Context } from 'aws-lambda';
 import { ingestData, S3Record } from './service';
 
 /**
- * Ingest data into Aurora PostgreSQL engine by batches
+ * Ingest data into Aurora PostgreSQL engine in batches
  * @param event
  * @param context
  */
