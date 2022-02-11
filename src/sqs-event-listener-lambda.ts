@@ -3,9 +3,18 @@ import { SFNClient, StartExecutionCommand } from '@aws-sdk/client-sfn';
 
 const client = new SFNClient({ region: 'eu-west-1' });
 
+/**
+ * SQS event source Lambda
+ * @param event
+ * @param context
+ * @returns
+ */
 export async function handler(event: SQSEvent, context: Context) {
     try {
         console.log(`event ${JSON.stringify(event, null, 2)}`);
+        /**
+         * Collect batch of S3 keys
+         */
         const s3Keys: Array<string> = new Array<string>();
         for (const record of event.Records) {
             const bodyJson = JSON.parse(record.body);
@@ -14,6 +23,9 @@ export async function handler(event: SQSEvent, context: Context) {
                 s3Keys.push(record.s3.object.key);
             }
         }
+        /**
+         * Execute state machine with event as S3 Object key batch
+         */
         const command = new StartExecutionCommand({
             input: JSON.stringify(s3Keys),
             stateMachineArn: process.env.STATE_MACHINE_ARN

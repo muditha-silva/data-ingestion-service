@@ -12,3 +12,4 @@ stdout
 .cdk.staging
 cdk.out
 junit.xml
+cdk-exports.json

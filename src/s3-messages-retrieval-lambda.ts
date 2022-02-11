@@ -1,6 +1,12 @@
 import { Context } from 'aws-lambda';
 import { getS3Objects, S3Record } from './service';
 
+/**
+ * Retrieve S3 Objects in batches
+ * @param event
+ * @param context
+ * @returns
+ */
 export async function handler(event: any, context: Context): Promise<string> {
     try {
         console.log(`event ${JSON.stringify(event, null, 2)}`);

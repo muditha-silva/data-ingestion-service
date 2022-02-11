@@ -6,7 +6,7 @@ const config: Configuration = {
     entry: {       
         'sqs-event-listener-lambda':'./src/sqs-event-listener-lambda.ts',
         's3-messages-retrieval-lambda':'./src/s3-messages-retrieval-lambda.ts',
-        'rds-message-ingestion-lambda':'./src/rds-message-ingestion-lambda.ts'
+        'aurora-message-ingestion-lambda':'./src/aurora-message-ingestion-lambda.ts'
     },
     devtool: 'inline-source-map',
     plugins: [],

@@ -8,8 +8,8 @@ import { Queue } from '@aws-cdk/aws-sqs';
 import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import { SqsDestination } from '@aws-cdk/aws-s3-notifications';
 import { Role, ServicePrincipal, PolicyDocument, PolicyStatement, Effect } from '@aws-cdk/aws-iam';
-import {Vpc} from '@aws-cdk/aws-ec2';
-import {ServerlessCluster,DatabaseClusterEngine,ParameterGroup} from '@aws-cdk/aws-rds';
+import { Vpc } from '@aws-cdk/aws-ec2';
+import { ServerlessCluster, DatabaseClusterEngine, ParameterGroup } from '@aws-cdk/aws-rds';
 
 const RUNTIME_DURATION: number = 5; // in minutes
 
@@ -19,37 +19,50 @@ export class ProjectStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
         this.id = id;
-        const appName = scope.node.tryGetContext('AppName');
-       
-
+        /**
+         * SQS queue
+         */
         const queue = new Queue(this, `${id}-s3-event-notification-queue`, {
             queueName: 's3-event-notification-queue',
             visibilityTimeout: Duration.minutes(RUNTIME_DURATION),
             deliveryDelay: Duration.seconds(1),
             receiveMessageWaitTime: Duration.seconds(1)
         });
-        
-        const s3BucketName =scope.node.tryGetContext('RawDataBucketName');    
+
+        /**
+         * S3 Bucket
+         */
+        const s3BucketName = scope.node.tryGetContext('RawDataBucketName');
         const rawDataBucket = new Bucket(this, `${id}-raw-data-bucket`, {
             bucketName: `${s3BucketName}-${this.region}`
         });
 
-        rawDataBucket.addEventNotification(EventType.OBJECT_CREATED, new SqsDestination(queue), {            
+        rawDataBucket.addEventNotification(EventType.OBJECT_CREATED, new SqsDestination(queue), {
             suffix: '.json'
         });
 
-    const dbName=scope.node.tryGetContext('DataBaseName');
-    // Create the VPC needed for the Aurora Serverless DB cluster
-    const vpc = new Vpc(this, `${id}-data-ingestion-vpc`);
-    // Create the Serverless Aurora DB cluster; set the engine to Postgres
-    const cluster = new ServerlessCluster(this, 'AuroraDataCluster', {
-      engine: DatabaseClusterEngine.AURORA_POSTGRESQL,
-      parameterGroup: ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
-      defaultDatabaseName: dbName,
-      vpc,
-      scaling: { autoPause: Duration.seconds(0) } // Optional. If not set, then instance will pause after 5 minutes 
-    });
+        /**
+         * Serverless Aurora PostgreSQL
+         */
+        const dbName = scope.node.tryGetContext('DataBaseName');
+        // Create the VPC needed for the Aurora Serverless DB cluster
+        const vpc = new Vpc(this, `${id}-data-ingestion-vpc`);
+        // Create the Serverless Aurora DB cluster; set the engine to Postgres
+        const cluster = new ServerlessCluster(this, 'AuroraDataCluster', {
+            engine: DatabaseClusterEngine.AURORA_POSTGRESQL,
+            parameterGroup: ParameterGroup.fromParameterGroupName(
+                this,
+                'ParameterGroup',
+                'default.aurora-postgresql10'
+            ),
+            defaultDatabaseName: dbName,
+            vpc,
+            scaling: { autoPause: Duration.seconds(0) } // Optional. If not set, then instance will pause after 5 minutes
+        });
 
+        /**
+         * IAM role for Step Function Lambda
+         */
         const stepFunctionLambdaRole = new Role(this, id, {
             assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
             inlinePolicies: {
@@ -64,7 +77,7 @@ export class ProjectStack extends Stack {
                             effect: Effect.ALLOW,
                             actions: ['s3:GetObject'],
                             resources: [`arn:aws:s3:::${rawDataBucket.bucketName}/*`]
-                        }),                       
+                        }),
                         new PolicyStatement({
                             effect: Effect.ALLOW,
                             actions: ['logs:*'],
@@ -86,11 +99,14 @@ export class ProjectStack extends Stack {
         const stepFunctionLambdaCommonEnvProps = {
             CLUSTER_ARN: cluster.clusterArn,
             SECRET_ARN: cluster.secret?.secretArn || '',
-            DB_NAME:dbName ,
-            TABLE_NAME:scope.node.tryGetContext('RawDataTableName'),
+            DB_NAME: dbName,
+            TABLE_NAME: scope.node.tryGetContext('RawDataTableName'),
             AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
         };
 
+        /**
+         * S3 objectrRetrieval Lambda
+         */
         const s3MessageRetrieverLambda = new Function(this, `${id}-s3-message-retrieval-function`, {
             ...lambdaCommonProps,
             functionName: 's3-message-retrieval-lambda',
@@ -102,31 +118,40 @@ export class ProjectStack extends Stack {
             }
         });
 
-        const ddbMessageIngestionLambda = new Function(this, `${id}-rds-message-ingestion-function`, {
+        /**
+         * PostgreSQL data ingestion Lambda
+         */
+        const auroraMessageIngestionLambda = new Function(this, `${id}-aurora-message-ingestion-function`, {
             ...lambdaCommonProps,
-            functionName: 'rds-message-ingestion-lambda',
-            handler: 'rds-message-ingestion-lambda.handler',
+            functionName: 'aurora-message-ingestion-lambda',
+            handler: 'aurora-message-ingestion-lambda.handler',
             role: stepFunctionLambdaRole,
             environment: stepFunctionLambdaCommonEnvProps
         });
 
-        cluster.grantDataApiAccess(ddbMessageIngestionLambda);
+        cluster.grantDataApiAccess(auroraMessageIngestionLambda);
 
         const s3MessageRretriever = new LambdaInvoke(this, 's3 message retriever', {
             lambdaFunction: s3MessageRetrieverLambda
         });
 
-        const ddbMessageIngester = new LambdaInvoke(this, 'ddb message ingester', {
-            lambdaFunction: ddbMessageIngestionLambda
+        const ddbMessageIngester = new LambdaInvoke(this, 'aurora message ingester', {
+            lambdaFunction: auroraMessageIngestionLambda
         });
 
         const chain = Chain.start(s3MessageRretriever).next(ddbMessageIngester);
 
+        /**
+         * State Machine definition
+         */
         const stateMachine = new StateMachine(this, 'message-ingestion-state-machine', {
             definition: chain,
             stateMachineName: 'message-ingestion-state-machine'
         });
 
+        /**
+         * SQS event source Lambda
+         */
         const sqsEventListnerLambda = new Function(this, `${id}-sqs-event-listner-function`, {
             ...lambdaCommonProps,
             functionName: 'sqs-event-listner',
