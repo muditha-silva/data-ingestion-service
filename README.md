@@ -88,7 +88,7 @@ This stack uses **_assets_**, therefore the toolkit stack (CDKToolkit) therefore
 **Connect to Database**
 
 -   Select `Query Editor` from `RDS dashboard` .
--   Select the database begins with `dataingestionservice-auroradatacluster` fromm the dropdown menu.
+-   Select the database name begins with `dataingestionservice-auroradatacluster` from the dropdown menu.
 -   For the Database username, select `Connect with a Secrets Manager ARN` (use the secret ARN begins with `AuroraDataClusterSecret` from `Secrets manager` as the Secrets Manager ARN).
 -   For the default configuration Use `RawDataDB` as the database name.
 
