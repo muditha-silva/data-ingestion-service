@@ -13,7 +13,7 @@ The proposed solution is a production-ready AWS fully managed scalable serverles
 -   `S3` for Object store
 -   `Serverless Aurora PostgreSQL` as Back End
 -   `SQS` for buffering S3 `Object Create` events
--   `Lambda Function (sqs-event-listener-lambda)` Batch process events using Lambda event source configurations (Batch Size and Batch Window). Trigger State Machine execution and pass event batches as input for Lambda code [here](./src/sqs-event-listener-lambda.ts)
+-   `Lambda Function (sqs-event-listener-lambda)` Batch process events using Lambda event source configurations (Batch Size and Batch Window). Trigger State Machine execution and pass event batches as input for Step Function Lambda. code [here](./src/sqs-event-listener-lambda.ts)
 
 -   `Step Function` process S3 Object Create events in batches, retrieve the S3 Objects, and ingest data into PostgreSQL.
 
