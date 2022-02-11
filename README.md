@@ -73,7 +73,7 @@ Install the CDK globally
 > npm install -g cdk
 ```
 
-This stack uses **_assets_**, therefore the toolkit stack (CDKToolkit) therefore the toolkit stack (CDKToolkit) must deploy to the environment if it does not exist.
+This stack uses **assets**, therefore the toolkit stack (CDKToolkit) must deploy to the environment if it does not exist.
 
 ```
 > cdk bootstrap aws://{aws-account}/{aws-region}
