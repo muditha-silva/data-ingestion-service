@@ -1,7 +1,7 @@
 {
   "name": "data-ingestion-service",
   "version": "1.0.0",
-  "description": "Bulk data batch processing from AWS S3 to serverless PostgreSQL ",
+  "description": "Bulk data batch processing from AWS S3 to serverless Aurora PostgreSQL",
   "main": "index.js",
   "scripts": {
     "test": "npm run prettier:format && jest --env=node",

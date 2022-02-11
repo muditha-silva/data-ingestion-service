@@ -3,8 +3,8 @@ import { partitionRecords, getObject, batchInsert, ParamType } from './utils';
 const currentDate: string = new Date().toISOString().split('T')[0];
 
 /**
- * 
- * @param s3Records 
+ * Ingest S3 data in batches
+ * @param s3Records
  */
 export async function ingestData(s3Records: S3Record[]) {
     /**
@@ -40,9 +40,9 @@ async function ingestDataBatch(s3Records: S3Record[]) {
 }
 
 /**
- * Retrieve S3 objects
- * @param s3Keys 
- * @returns 
+ * Retrieve S3 objects in batches
+ * @param s3Keys
+ * @returns
  */
 export async function getS3Objects(s3Keys: string[]): Promise<Array<S3Record>> {
     const s3Records: Array<S3Record> = new Array<S3Record>();
