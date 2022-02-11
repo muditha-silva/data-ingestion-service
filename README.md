@@ -85,14 +85,14 @@ This stack uses **_assets_**, therefore the toolkit stack (CDKToolkit) therefore
 
 ### Create the raw_data table
 
-**_ Connect to Database _**
+**Connect to Database**
 
 -   Select `Query Editor` from `RDS dashboard` .
 -   Select the database begins with `dataingestionservice-auroradatacluster` fromm the dropdown menu.
 -   For the Database username, select `Connect with a Secrets Manager ARN` (use the secret ARN begins with `AuroraDataClusterSecret` from `Secrets manager` as the Secrets Manager ARN).
 -   For the default configuration Use `RawDataDB` as the database name.
 
-**_ Create Table Script _**
+**Create Table Script**
 
 ```
     CREATE TABLE raw_data (
