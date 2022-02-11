@@ -58,9 +58,9 @@ git clone https://github.com/muditha-silva/data-ingestion-service.git
 
 Default stack configurations can find here [here](./etc/default.json).
 
-**_Important_**
+**Important**
 
--   Change the 'RawDataBucketName' for a unique s3 bucket name. Please note that Bucket name is suffixed with {aws-region}. For this senario **_raw-data-lake-dev-eu-west-1_**
+-   Change the 'RawDataBucketName' for a unique s3 bucket name. Please note that Bucket name is suffixed with {aws-region}. From the default configuration bucket name is **raw-data-lake-dev-eu-west-1**
 -   Lambda SQS event source mapping configurations for Batch Size and Batch Window (in minutes)
     -   `"SQSBatchSize":"100"`
     -   `"SQSBatchWindow":"1"`
