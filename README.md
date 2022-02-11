@@ -61,6 +61,7 @@ Default stack configurations can find here [here](./etc/default.json).
 **Important**
 
 -   Change the `RawDataBucketName` property to a unique s3 bucket name. Please note that bucket name is suffixed with {aws-region}. For the default configuration, bucket name is **raw-data-lake-dev-eu-west-1**
+-   For the default configuration table name property `RawDataTableName` is set to `raw_data`
 -   Lambda SQS event source mapping configurations for Batch Size and Batch Window (in minutes)
     -   `"SQSBatchSize":"100"`
     -   `"SQSBatchWindow":"1"`
