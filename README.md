@@ -71,7 +71,7 @@ Default stack configurations can find here [here](./etc/default.json).
 Install the CDK globally
 
 ```
-> npm install -g cdk
+npm install -g cdk
 ```
 
 This stack uses **assets**, therefore the toolkit stack (CDKToolkit) must deploy to the environment if it does not exist.
