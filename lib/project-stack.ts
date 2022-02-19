@@ -152,10 +152,10 @@ export class ProjectStack extends Stack {
         /**
          * SQS event source Lambda
          */
-        const sqsEventListnerLambda = new Function(this, `${id}-sqs-event-listner-function`, {
+        const sqsEventListnerLambda = new Function(this, `${id}-sqs-event-listener-function`, {
             ...lambdaCommonProps,
-            functionName: 'sqs-event-listner',
-            handler: 'sqs-event-listner-lambda.handler',
+            functionName: 'sqs-event-listener',
+            handler: 'sqs-event-listener-lambda.handler',
             environment: {
                 STATE_MACHINE_ARN: stateMachine.stateMachineArn
             }
