@@ -77,11 +77,11 @@ Install the CDK globally
 This stack uses **assets**, therefore the toolkit stack (CDKToolkit) must deploy to the environment if it does not exist.
 
 ```
-> cdk bootstrap aws://{aws-account}/{aws-region}
+cdk bootstrap aws://{aws-account}/{aws-region}
 ```
 
 ```
-> cdk deploy
+cdk deploy
 ```
 
 ### Create the raw_data table
