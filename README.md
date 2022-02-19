@@ -81,7 +81,7 @@ This stack uses **assets**, therefore the toolkit stack (CDKToolkit) must deploy
 ```
 
 ```
-> cdk deploy --o
+> cdk deploy
 ```
 
 ### Create the raw_data table
