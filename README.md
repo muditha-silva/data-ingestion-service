@@ -45,13 +45,13 @@ git clone https://github.com/muditha-silva/data-ingestion-service.git
 ### Install dependencies
 
 ```
-> npm install
+npm install
 ```
 
 ### Run the build
 
 ```
-> npm run build
+npm run build
 ```
 
 ### Deployment Stack Configurations.
